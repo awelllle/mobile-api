@@ -14,7 +14,7 @@ http://localhost:3002/register
 ```
 {
   "password": "John",
-  "email": "a@o.com"
+  "email": "a2@o.com"
 }
 ```
 

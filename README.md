@@ -9,7 +9,7 @@ The API is hosted on Render. Kindly bear in mind that it is hosted on a free ins
 ## Register
 
 ### URL
-http://localhost/register
+http://localhost:3002/register
 ### Sample Payload
 ```
 {
@@ -21,7 +21,7 @@ http://localhost/register
 ## Login
 
 ### URL
-http://localhost/login
+http://localhost:3002/login
 ### Sample Payload
 ```
 {

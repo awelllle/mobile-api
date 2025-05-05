@@ -9,13 +9,23 @@ The API is hosted on Render. Kindly bear in mind that it is hosted on a free ins
 ## Register
 
 ### URL
-https://vzy-u6g6.onrender.com/register
+http://localhost/register
 ### Sample Payload
 ```
 {
-  "name": "John",
-  "username": "Smith",
+  "password": "John",
   "email": "a@o.com"
 }
 ```
 
+## Login
+
+### URL
+http://localhost/login
+### Sample Payload
+```
+{
+  "password": "John",
+  "email": "a@o.com"
+}
+```

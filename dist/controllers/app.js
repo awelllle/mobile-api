@@ -59,56 +59,6 @@ class AppController {
             }
         });
     }
-    stripe(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const sig = req.headers['stripe-signature']; //  verify signature to prevent replay attacks
-            let event;
-            try {
-                event = stripe.webhooks.constructEvent(req.body, sig, 'your_stripe_webhook_secret');
-            }
-            catch (err) {
-                console.log('Webhook signature verification failed.');
-                return res.sendStatus(400);
-            }
-            // Handle the event according to your application's logic
-            switch (event.type) {
-                case 'payment_intent.succeeded':
-                    // Handle successful payment intent
-                    console.log('Payment succeeded:', event.data.object);
-                    const email = event.data.object.customer; // assuming email exists in the payload
-                    user_1.User.findOne({ email }, (err, user) => __awaiter(this, void 0, void 0, function* () {
-                        if (err) {
-                            console.log(err, 'error while updating records');
-                        }
-                        if (user != null) {
-                            user_1.User.updateOne({ email: email }, {
-                                $set: {
-                                    status: 'paid', //update status to paid
-                                },
-                            }, (err, updated) => {
-                                if (err) {
-                                    console.log(err);
-                                }
-                                console.log('User has been updated');
-                            });
-                        }
-                        else {
-                            console.log('User does not exist');
-                        }
-                    }));
-                case 'payment_intent.payment_failed':
-                    // Handle failed payment intent
-                    console.log('Payment failed:', event.data.object);
-                    break;
-                default:
-                    // Unexpected event type
-                    console.log('Unhandled event type:', event.type);
-                    break;
-            }
-            // Respond to Stripe to acknowledge receipt of the event
-            res.json({ received: true });
-        });
-    }
 }
 exports.AppController = AppController;
 //# sourceMappingURL=app.js.map

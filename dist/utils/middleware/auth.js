@@ -8,7 +8,7 @@ const generateToken = username => !username
         email: username,
         iat: Math.floor(Date.now() / 1000) - 30,
         //exp: Math.floor(Date.now() / 1000) + 60 * 60 * 60
-    }, process.env.SECRET, { expiresIn: '1h' })}`;
+    }, process.env.SECRET, { expiresIn: '1m' })}`;
 exports.generateToken = generateToken;
 /**
  * Authenticates a request by checking the authorization header. If successful,

@@ -20,7 +20,7 @@ export const generateToken = username =>
           //exp: Math.floor(Date.now() / 1000) + 60 * 60 * 60
         },
        process.env.SECRET,
-       { expiresIn: '1m' }
+       { expiresIn: '2d' }
       )}`;
 
 

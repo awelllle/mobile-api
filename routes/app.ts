@@ -16,6 +16,8 @@ export class AppRoutes {
 
         app.route('/loginWithGoogle').post(this.authController.loginWithGoogle)
 
+       // app.route('/loginWithLinkedIn').post(this.authController.loginWithLinkedIn)
+
         app.route('/updateUser').post([authenticate], this.appController.updateUser)
      
 

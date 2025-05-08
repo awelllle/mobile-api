@@ -13,6 +13,8 @@ exports.AuthController = void 0;
 const utils_1 = require("../utils");
 const crypto_1 = require("crypto");
 const jobseeker_1 = require("../models/jobseeker");
+const google_auth_library_1 = require("google-auth-library");
+const client = new google_auth_library_1.OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 class AuthController {
     registerUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -84,6 +86,59 @@ class AuthController {
                 console.log(hasRequired.message);
                 const message = hasRequired.message;
                 return utils_1.default.helpers.sendErrorResponse(res, { message }, 'Missing required fields');
+            }
+        });
+    }
+    loginWithGoogle(req, res) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function* () {
+            const { idToken } = req.body;
+            if (!idToken) {
+                return utils_1.default.helpers.sendErrorResponse(res, {}, 'Google ID token is required');
+            }
+            try {
+                // console.log('Expected audience:', process.env.GOOGLE_CLIENT_ID);
+                // Verify the Google ID token
+                const ticket = yield client.verifyIdToken({
+                    idToken,
+                    audience: process.env.GOOGLE_CLIENT_ID, // Replace with your Google Client ID
+                });
+                const payload = ticket.getPayload();
+                console.log('Payload audience:', payload === null || payload === void 0 ? void 0 : payload.aud); // Log the audience
+                if (!payload) {
+                    return utils_1.default.helpers.sendErrorResponse(res, {}, 'Invalid Google ID token');
+                }
+                const email = (_a = payload.email) === null || _a === void 0 ? void 0 : _a.toLowerCase();
+                const name = payload.name;
+                const googleId = payload.sub; // Google user ID
+                if (!email) {
+                    return utils_1.default.helpers.sendErrorResponse(res, {}, 'Google account email is required');
+                }
+                // Check if the user already exists
+                jobseeker_1.Jobseeker.findOne({ email }, (err, user) => __awaiter(this, void 0, void 0, function* () {
+                    if (err) {
+                        console.error(err, 'Error finding user');
+                        return utils_1.default.helpers.sendErrorResponse(res, {}, 'Something went wrong, please try again');
+                    }
+                    if (!user) {
+                        // If user doesn't exist, create a new one
+                        const id = (0, crypto_1.randomBytes)(60).toString('hex');
+                        user = new jobseeker_1.Jobseeker({
+                            email,
+                            userId: id,
+                            name,
+                            googleId,
+                        });
+                        yield user.save();
+                    }
+                    // Generate a token for the user
+                    const token = utils_1.default.auth.generateToken(user.email);
+                    return utils_1.default.helpers.sendSuccessResponse(res, [{ token }], 'Google login successful');
+                }));
+            }
+            catch (error) {
+                console.error(error, 'Google login error');
+                return utils_1.default.helpers.sendErrorResponse(res, {}, 'Failed to authenticate with Google');
             }
         });
     }

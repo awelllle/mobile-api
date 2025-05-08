@@ -12,6 +12,7 @@ class AppRoutes {
     routes(app) {
         app.route('/register').post(this.authController.registerUser);
         app.route('/login').post(this.authController.signIn);
+        app.route('/loginWithGoogle').post(this.authController.loginWithGoogle);
         app.route('/updateUser').post([authenticate_1.authenticate], this.appController.updateUser);
         //  app.route('/for/alerts/from/stripe').post(this.appController.stripe)
     }

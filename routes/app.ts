@@ -12,7 +12,6 @@ export class AppRoutes {
 
     public routes(app): void {
         app.route('/register').post(this.authController.registerUser)
-
         app.route('/login').post(this.authController.signIn)
 
         app.route('/updateUser').post([authenticate], this.appController.updateUser)

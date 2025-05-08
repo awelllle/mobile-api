@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { default as utils }from '../utils'
 import {randomBytes} from 'crypto'
 
-import { User } from '../models/user';
+import { Jobseeker } from '../models/jobseeker';
 
 import { isFuture } from 'date-fns'
 
@@ -21,47 +21,51 @@ export class AuthController {
       if (hasRequired.success) {
 
 
-        const token = utils.auth.generateToken('awelle')   
-        return  res.status(200).json({token, userId: '1234567890'});
-        
-       // let email: string = body.email.toLowerCase();
-        // User.findOne({email}, async (err:Error, user) => {
-        //     if (err){
-        //         console.log(err, 'user signup error');
-        //         return utils.helpers.sendErrorResponse(res, { }, 'Something went wrong, please try again')
-        //     }
+        // const token = utils.auth.generateToken('awelle')   
+        // return  res.status(200).json({token, userId: '1234567890'});
 
-        //    if(user == null){ 
+       let email: string = body.email.toLowerCase();
+        Jobseeker.findOne({email}, async (err:Error, user) => {
+            if (err){
+                console.log(err, 'user signup error');
+                return utils.helpers.sendErrorResponse(res, { }, 'Something went wrong, please try again')
+            }
 
-        //             const id = randomBytes(60).toString('hex');
+           if(user == null){ 
 
-        //             user = new User({
-        //                 email: email,
-        //                 userId: id,
-        //                 name: body.name,                 
-        //                 username: body.username,
+                    const id = randomBytes(60).toString('hex');
+
+                    user = new Jobseeker({
+                        email: email,
+                        userId: id,
+                        password: body.password,                 
+                        
                       
 
-        //             })
+                    })
 
-        //             await user.save();
-        //             const token = utils.auth.generateToken(user.email)
-        //           return  res.status(200).json({token: token});
+                    await user.save();
+                    const token = utils.auth.generateToken(user.email)
+                    return utils.helpers.sendSuccessResponse(
+                      res,
+                      [{token}],
+                      'signup successful',
+                      )
 
 
-        //     }else{
+            }else{
 
-        //         return utils.helpers.errorResponse(
-        //           res,
-        //           [],
-        //           'User already exists',
-        //           )
+                return utils.helpers.errorResponse(
+                  res,
+                  [],
+                  'User already exists',
+                  )
           
       
-        //     }
+            }
                 
             
-        // })
+        })
       
       }else{
 
@@ -88,70 +92,45 @@ public async signIn(req: Request & {user: any}, res: Response) {
     { name: 'password', type: 'string' },
   ]
   const { body } = req;
+  console.log('body', body)
   const hasRequired = utils.helpers.validParam(body, required)
 
   if (hasRequired.success) {
 
-  
-           const token = utils.auth.generateToken('awelle')   
-           return  res.status(200).json({token, userId: '1234567890'});
-        
-
-    // let username: string = body.username.toLowerCase();
-    // let accessType: string = body.accessType.toLowerCase();
+     let email: string = body.email.toLowerCase();
+     let password: string = body.password
     
 
-    //const types = ['user', 'merchant'];
-   
+    Jobseeker.findOne({email, password}, async (err:Error, user) => {
+        if (err){
+            return utils.helpers.sendErrorResponse(res, { }, 'Something went wrong, please try again')
+        }
 
-    // if(!types.includes(accessType)){
-    //   return utils.helpers.errorResponse(
-    //     res,
-    //     [],
-    //     'Invalid parameter for access type',
-    //     )
-    
-    // }
+       if(user != null){ 
 
-    // var userType
+        const token = utils.auth.generateToken(user.email)
 
-    // if(accessType === 'user'){
-    //   userType = User
-    // }else{
-    //   userType = Merchant
-    // }
+        return utils.helpers.sendSuccessResponse(
+          res,
+          [{token}],
+          'login successful',
+          )
 
+       // return  res.status(200).json({token, userId: '1234567890'});
 
-    // userType.findOne({username}, async (err:Error, user) => {
-    //     if (err){
-    //         return utils.helpers.sendErrorResponse(res, { }, 'Something went wrong, please try again')
-    //     }
+        }else{
 
-    //    if(user != null){ 
-
-    //     const token = utils.auth.generateToken(user.username)
-
-    //     if(accessType === 'user'){
-    //        return  res.status(200).json({token, userId: user.id});
-    //     }else{
-    //       return  res.status(200).json({token, merchantId: user.id});
-    //     }
-
-
-
-    //     }else{
-
-    //         return utils.helpers.errorResponse(
-    //           res,
-    //           [],
-    //           'User does not exist',
-    //           )
+            return utils.helpers.errorResponse(
+              res,
+              [],
+              'Incorrect email or password',
+              )
       
   
-    //     }
+        }
             
         
-    // })
+     })
   
   }else{
 

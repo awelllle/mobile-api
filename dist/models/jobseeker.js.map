@@ -1,0 +1,1 @@
+{"version":3,"file":"jobseeker.js","sourceRoot":"","sources":["../../models/jobseeker.ts"],"names":[],"mappings":";;;AAAA,uCAA0D;AAY7C,QAAA,eAAe,GAAG,IAAI,iBAAM,CACvC;IACE,KAAK,EAAE,MAAM;IACb,IAAI,EAAE,MAAM;IACZ,QAAQ,EAAE,MAAM;IAChB,MAAM,EAAE,MAAM;CAGf,CAEF,CAAC;AAEW,QAAA,SAAS,GAAG,IAAA,gBAAK,EAAC,WAAW,EAAE,uBAAe,CAAC,CAAA"}

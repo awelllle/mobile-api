@@ -3,23 +3,23 @@ import { Schema, model, Error, Document } from 'mongoose';
 export interface UserInterface extends Document {
   name: string;
   email: string;
-  username: string,
+  password: string;
   userId: string;
   status: string;
 
 }
 
 
-export const UserSchema = new Schema<UserInterface>(
+export const JobseekerSchema = new Schema<UserInterface>(
   {
     email: String,
     name: String,
-    username: String,
+    password: String,
     userId: String,
-    status: {type: String, default:'unpaid'},
+    
    
   },
  
 );
 
-export const User = model('User', UserSchema)
+export const Jobseeker = model('Jobseeker', JobseekerSchema)

@@ -11,7 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const utils_1 = require("../utils");
-const user_1 = require("../models/user");
+const jobseeker_1 = require("../models/jobseeker");
 const stripe_1 = require("stripe");
 const stripe = new stripe_1.default('sk_test_26PHem9AhJZvU623DfE1x4sd', {
     apiVersion: '2023-10-16',
@@ -28,13 +28,13 @@ class AppController {
             if (hasRequired.success) {
                 console.log(req.user.email, 'rr');
                 let email = req.user.email.toLowerCase();
-                user_1.User.findOne({ email }, (err, user) => __awaiter(this, void 0, void 0, function* () {
+                jobseeker_1.Jobseeker.findOne({ email }, (err, user) => __awaiter(this, void 0, void 0, function* () {
                     if (err) {
                         console.log(err, 'user signup error');
                         return utils_1.default.helpers.sendErrorResponse(res, {}, 'Something went wrong, please try again');
                     }
                     if (user != null) {
-                        user_1.User.updateOne({ email: email }, {
+                        jobseeker_1.Jobseeker.updateOne({ email: email }, {
                             $set: {
                                 name: body.name,
                                 username: body.username

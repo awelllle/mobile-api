@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { default as utils }from '../utils'
-import { User, UserInterface } from '../models/user';
+import { Jobseeker, UserInterface } from '../models/jobseeker';
 
 import Stripe from 'stripe';
 
@@ -24,7 +24,7 @@ public async updateUser(req: Request & {user: any}, res: Response) {
     console.log(req.user.email, 'rr')
     let email: string = req.user.email.toLowerCase();
 
-    User.findOne({email}, async (err:Error, user) => {
+    Jobseeker.findOne({email}, async (err:Error, user) => {
         if (err){
             console.log(err, 'user signup error');
             return utils.helpers.sendErrorResponse(res, { }, 'Something went wrong, please try again')
@@ -33,7 +33,7 @@ public async updateUser(req: Request & {user: any}, res: Response) {
        if(user != null){ 
 
                
-            User.updateOne(
+            Jobseeker.updateOne(
               { email: email}, {
               $set: {
                   name: body.name,

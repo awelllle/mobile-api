@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const sendSuccessResponse = function (res, content, message, status) {
+const sendSuccessResponse = function (res, content, // Allow array of objects or strings
+message, status) {
     const data = {
         success: true,
         message,

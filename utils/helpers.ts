@@ -12,7 +12,7 @@ type DynamicContent =
 
 const sendSuccessResponse = function (
   res: Response,
-  content: Array<String>,
+  content:  Array<Record<string, unknown>> | Array<string>, // Allow array of objects or strings
   message: string,
   status?: number
 ) {

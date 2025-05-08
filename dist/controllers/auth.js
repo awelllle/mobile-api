@@ -11,6 +11,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthController = void 0;
 const utils_1 = require("../utils");
+const crypto_1 = require("crypto");
+const jobseeker_1 = require("../models/jobseeker");
 class AuthController {
     registerUser(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -21,33 +23,29 @@ class AuthController {
             const { body } = req;
             const hasRequired = utils_1.default.helpers.validParam(body, required);
             if (hasRequired.success) {
-                const token = utils_1.default.auth.generateToken('awelle');
-                return res.status(200).json({ token, userId: '1234567890' });
-                // let email: string = body.email.toLowerCase();
-                // User.findOne({email}, async (err:Error, user) => {
-                //     if (err){
-                //         console.log(err, 'user signup error');
-                //         return utils.helpers.sendErrorResponse(res, { }, 'Something went wrong, please try again')
-                //     }
-                //    if(user == null){ 
-                //             const id = randomBytes(60).toString('hex');
-                //             user = new User({
-                //                 email: email,
-                //                 userId: id,
-                //                 name: body.name,                 
-                //                 username: body.username,
-                //             })
-                //             await user.save();
-                //             const token = utils.auth.generateToken(user.email)
-                //           return  res.status(200).json({token: token});
-                //     }else{
-                //         return utils.helpers.errorResponse(
-                //           res,
-                //           [],
-                //           'User already exists',
-                //           )
-                //     }
-                // })
+                // const token = utils.auth.generateToken('awelle')   
+                // return  res.status(200).json({token, userId: '1234567890'});
+                let email = body.email.toLowerCase();
+                jobseeker_1.Jobseeker.findOne({ email }, (err, user) => __awaiter(this, void 0, void 0, function* () {
+                    if (err) {
+                        console.log(err, 'user signup error');
+                        return utils_1.default.helpers.sendErrorResponse(res, {}, 'Something went wrong, please try again');
+                    }
+                    if (user == null) {
+                        const id = (0, crypto_1.randomBytes)(60).toString('hex');
+                        user = new jobseeker_1.Jobseeker({
+                            email: email,
+                            userId: id,
+                            password: body.password,
+                        });
+                        yield user.save();
+                        const token = utils_1.default.auth.generateToken(user.email);
+                        return utils_1.default.helpers.sendSuccessResponse(res, [{ token }], 'signup successful');
+                    }
+                    else {
+                        return utils_1.default.helpers.errorResponse(res, [], 'User already exists');
+                    }
+                }));
             }
             else {
                 console.log(hasRequired.message);
@@ -63,45 +61,24 @@ class AuthController {
                 { name: 'password', type: 'string' },
             ];
             const { body } = req;
+            console.log('body', body);
             const hasRequired = utils_1.default.helpers.validParam(body, required);
             if (hasRequired.success) {
-                const token = utils_1.default.auth.generateToken('awelle');
-                return res.status(200).json({ token, userId: '1234567890' });
-                // let username: string = body.username.toLowerCase();
-                // let accessType: string = body.accessType.toLowerCase();
-                //const types = ['user', 'merchant'];
-                // if(!types.includes(accessType)){
-                //   return utils.helpers.errorResponse(
-                //     res,
-                //     [],
-                //     'Invalid parameter for access type',
-                //     )
-                // }
-                // var userType
-                // if(accessType === 'user'){
-                //   userType = User
-                // }else{
-                //   userType = Merchant
-                // }
-                // userType.findOne({username}, async (err:Error, user) => {
-                //     if (err){
-                //         return utils.helpers.sendErrorResponse(res, { }, 'Something went wrong, please try again')
-                //     }
-                //    if(user != null){ 
-                //     const token = utils.auth.generateToken(user.username)
-                //     if(accessType === 'user'){
-                //        return  res.status(200).json({token, userId: user.id});
-                //     }else{
-                //       return  res.status(200).json({token, merchantId: user.id});
-                //     }
-                //     }else{
-                //         return utils.helpers.errorResponse(
-                //           res,
-                //           [],
-                //           'User does not exist',
-                //           )
-                //     }
-                // })
+                let email = body.email.toLowerCase();
+                let password = body.password;
+                jobseeker_1.Jobseeker.findOne({ email, password }, (err, user) => __awaiter(this, void 0, void 0, function* () {
+                    if (err) {
+                        return utils_1.default.helpers.sendErrorResponse(res, {}, 'Something went wrong, please try again');
+                    }
+                    if (user != null) {
+                        const token = utils_1.default.auth.generateToken(user.email);
+                        return utils_1.default.helpers.sendSuccessResponse(res, [{ token }], 'login successful');
+                        // return  res.status(200).json({token, userId: '1234567890'});
+                    }
+                    else {
+                        return utils_1.default.helpers.errorResponse(res, [], 'Incorrect email or password');
+                    }
+                }));
             }
             else {
                 console.log(hasRequired.message);

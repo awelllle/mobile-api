@@ -19,6 +19,10 @@ export class AppRoutes {
        // app.route('/loginWithLinkedIn').post(this.authController.loginWithLinkedIn)
 
         app.route('/updateUser').post([authenticate], this.appController.updateUser)
+
+        app.route('/job').post([authenticate], this.appController.createJob)
+
+        app.route('/job').get([authenticate], this.appController.jobs)
      
 
       //  app.route('/for/alerts/from/stripe').post(this.appController.stripe)

@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
 import { default as utils }from '../utils'
-import { Jobseeker, UserInterface } from '../models/jobseeker';
+import { Jobseeker } from '../models/jobseeker';
+import { Job, JobSchema } from '../models/job';
 
 import Stripe from 'stripe';
+import { body } from "express-validator";
 
 const stripe = new Stripe('sk_test_26PHem9AhJZvU623DfE1x4sd', {
   apiVersion: '2023-10-16', 
@@ -100,6 +102,47 @@ public async updateUser(req: Request & {user: any}, res: Response) {
 }
 
 
+public async createJob(req: Request & {user: any}, res: Response) {
 
+                    let job = new Job({
+                      title: req.body.title,
+                      company: req.body.company,
+                      companyImage: req.body.companyImage,
+                      tags: req.body.tags,
+                      description: req.body.description,
+                      postedBy: req.body.postedBy,
+                      date: Date.now,                
+                                            
+                                          
+                    
+                                        })
+  
+                      await job.save();
+                    
+                      return utils.helpers.sendSuccessResponse(
+                        res,
+                        [],
+                        'job created',
+                        )
+
+}
+
+public async jobs(req: Request & {user: any}, res: Response) {
+
+    Job.find({}, async (err:Error, jobs) => {
+        if (err){
+            console.log(err, 'get job error');
+            return utils.helpers.sendErrorResponse(res, { }, 'Something went wrong, please try again')
+        }
+
+        return utils.helpers.sendSuccessResponse(
+                            res,
+                            jobs,
+                            'jobs fetched',
+                            )
+
+      });
+
+}
 
 }

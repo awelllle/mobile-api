@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const utils_1 = require("../utils");
+const job_1 = require("../models/job");
 const stripe_1 = require("stripe");
 const stripe = new stripe_1.default('sk_test_26PHem9AhJZvU623DfE1x4sd', {
     apiVersion: '2023-10-16',
@@ -73,6 +74,32 @@ class AppController {
             //   'Missing required fields',
             //   )
             // }
+        });
+    }
+    createJob(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let job = new job_1.Job({
+                title: req.body.title,
+                company: req.body.company,
+                companyImage: req.body.companyImage,
+                tags: req.body.tags,
+                description: req.body.description,
+                postedBy: req.body.postedBy,
+                date: Date.now,
+            });
+            yield job.save();
+            return utils_1.default.helpers.sendSuccessResponse(res, [], 'job created');
+        });
+    }
+    jobs(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            job_1.Job.find({}, (err, jobs) => __awaiter(this, void 0, void 0, function* () {
+                if (err) {
+                    console.log(err, 'get job error');
+                    return utils_1.default.helpers.sendErrorResponse(res, {}, 'Something went wrong, please try again');
+                }
+                return utils_1.default.helpers.sendSuccessResponse(res, jobs, 'jobs fetched');
+            }));
         });
     }
 }

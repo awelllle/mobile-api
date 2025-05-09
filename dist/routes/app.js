@@ -15,6 +15,8 @@ class AppRoutes {
         app.route('/loginWithGoogle').post(this.authController.loginWithGoogle);
         // app.route('/loginWithLinkedIn').post(this.authController.loginWithLinkedIn)
         app.route('/updateUser').post([authenticate_1.authenticate], this.appController.updateUser);
+        app.route('/job').post([authenticate_1.authenticate], this.appController.createJob);
+        app.route('/job').get([authenticate_1.authenticate], this.appController.jobs);
         //  app.route('/for/alerts/from/stripe').post(this.appController.stripe)
     }
 }

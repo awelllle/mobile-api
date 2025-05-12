@@ -36,11 +36,10 @@ export class AuthController {
 
            if(user == null){ 
 
-                    const id = randomBytes(60).toString('hex');
+            
 
                     user = new Jobseeker({
                         email: email,
-                        userId: id,
                         password: body.password,                 
                         
                       

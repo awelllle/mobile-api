@@ -5,6 +5,18 @@ const mongoose_1 = require("mongoose");
 exports.JobseekerSchema = new mongoose_1.Schema({
     email: String,
     name: String,
+    bio: String,
+    profileImage: {
+        type: Object,
+        default: {
+            uri: '',
+            type: '',
+            name: ''
+        }
+    },
+    location: String,
+    skills: (Array),
+    portfolio: (Array),
     password: String,
     userId: String,
 });

@@ -20,9 +20,13 @@ export class AppRoutes {
 
         app.route('/updateUser').post([authenticate], this.appController.updateUser)
 
+        app.route('/profile').get([authenticate], this.appController.profile)
+
         app.route('/job').post([authenticate], this.appController.createJob)
 
         app.route('/job').get([authenticate], this.appController.jobs)
+
+        app.route('/sendMessage').post([authenticate], this.appController.sendMessage)
      
 
       //  app.route('/for/alerts/from/stripe').post(this.appController.stripe)

@@ -34,10 +34,8 @@ class AuthController {
                         return utils_1.default.helpers.sendErrorResponse(res, {}, 'Something went wrong, please try again');
                     }
                     if (user == null) {
-                        const id = (0, crypto_1.randomBytes)(60).toString('hex');
                         user = new jobseeker_1.Jobseeker({
                             email: email,
-                            userId: id,
                             password: body.password,
                         });
                         yield user.save();

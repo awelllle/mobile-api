@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Types } from 'mongoose'; 
 import { default as utils }from '../utils'
 import { Jobseeker } from '../models/jobseeker';
 import { Job, JobSchema } from '../models/job';
@@ -161,6 +162,8 @@ public async createJob(req: Request & {user: any}, res: Response) {
 
 public async jobs(req: Request & {user: any}, res: Response) {
 
+    console.log(req.query, 'Query');
+
     Job.find({}, async (err:Error, jobs) => {
         if (err){
             console.log(err, 'get job error');
@@ -177,6 +180,26 @@ public async jobs(req: Request & {user: any}, res: Response) {
 
 }
 
+public async getJob(req: Request & {user: any}, res: Response) {
+
+ 
+  let id = new Types.ObjectId( req.params.id); 
+  
+  console.log(id, 'Job ID from params'); // Log the id
+
+  try {
+    const job = await Job.findById(id); // Fetch the job by ID
+    if (!job) {
+      return utils.helpers.sendErrorResponse(res, {}, 'Job not found');
+    }
+
+    return utils.helpers.sendSuccessResponse(res, [{job}], 'Job fetched successfully');
+  } catch (error) {
+    console.error('Error fetching job:', error);
+    return utils.helpers.sendErrorResponse(res, {}, 'Something went wrong, please try again');
+  }
+
+}
 
 
 

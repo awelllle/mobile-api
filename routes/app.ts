@@ -26,6 +26,8 @@ export class AppRoutes {
 
         app.route('/job').get([authenticate], this.appController.jobs)
 
+        app.route('/job/:id').get([authenticate], this.appController.getJob)
+
         app.route('/sendMessage').post([authenticate], this.appController.sendMessage)
      
 

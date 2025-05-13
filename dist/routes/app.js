@@ -18,6 +18,7 @@ class AppRoutes {
         app.route('/profile').get([authenticate_1.authenticate], this.appController.profile);
         app.route('/job').post([authenticate_1.authenticate], this.appController.createJob);
         app.route('/job').get([authenticate_1.authenticate], this.appController.jobs);
+        app.route('/job/:id').get([authenticate_1.authenticate], this.appController.getJob);
         app.route('/sendMessage').post([authenticate_1.authenticate], this.appController.sendMessage);
         //  app.route('/for/alerts/from/stripe').post(this.appController.stripe)
     }

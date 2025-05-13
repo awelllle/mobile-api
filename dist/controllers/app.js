@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
+const mongoose_1 = require("mongoose");
 const utils_1 = require("../utils");
 const jobseeker_1 = require("../models/jobseeker");
 const job_1 = require("../models/job");
@@ -113,6 +114,7 @@ class AppController {
     }
     jobs(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(req.query, 'Query');
             job_1.Job.find({}, (err, jobs) => __awaiter(this, void 0, void 0, function* () {
                 if (err) {
                     console.log(err, 'get job error');
@@ -120,6 +122,23 @@ class AppController {
                 }
                 return utils_1.default.helpers.sendSuccessResponse(res, jobs, 'jobs fetched');
             }));
+        });
+    }
+    getJob(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let id = new mongoose_1.Types.ObjectId(req.params.id);
+            console.log(id, 'Job ID from params'); // Log the id
+            try {
+                const job = yield job_1.Job.findById(id); // Fetch the job by ID
+                if (!job) {
+                    return utils_1.default.helpers.sendErrorResponse(res, {}, 'Job not found');
+                }
+                return utils_1.default.helpers.sendSuccessResponse(res, [{ job }], 'Job fetched successfully');
+            }
+            catch (error) {
+                console.error('Error fetching job:', error);
+                return utils_1.default.helpers.sendErrorResponse(res, {}, 'Something went wrong, please try again');
+            }
         });
     }
     sendMessage(req, res) {

@@ -14,7 +14,13 @@ exports.JobseekerSchema = new mongoose_1.Schema({
             name: ''
         }
     },
-    location: String,
+    location: {
+        type: Object,
+        default: {
+            country: '',
+            city: ''
+        }
+    },
     skills: (Array),
     portfolio: (Array),
     password: String,

@@ -64,7 +64,13 @@ export const JobseekerSchema = new Schema<UserInterface>(
         name: ''
       }
     },
-    location: String,
+    location: {
+      type: Object, // Define location as an object
+      default: {
+        country: '',
+        city: ''
+      }
+    },
     skills: Array<skills>,
     portfolio: Array<portfolio>,
 

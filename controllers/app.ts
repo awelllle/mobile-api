@@ -17,90 +17,48 @@ export class AppController {
 public async updateUser(req: Request & {user: any}, res: Response) {
 
   console.log(req.body, 'body')
+  const email: string = req.user.email.toLowerCase(); // Get the user's email from the request
 
-                  return utils.helpers.sendSuccessResponse(
-                    res,
-                    [],
-                    'User has been updated',
-                    )
+  try {
+    // Find the user by email and update their details
+    const updatedUser = await Jobseeker.findOneAndUpdate(
+      { email }, // Find the user by email
+      {
+        $set: {
+          name: req.body.name,
+          bio: req.body.bio,
+          profileImage: req.body.profileImage,
+          location: req.body.location,
+          skills: req.body.skills,
+          portfolio: req.body.portfolio,
+        },
+      },
+      { new: true } // Return the updated document
+    );
 
-  // const required = [
-  //   { name: 'name', type: 'string' },
-  //   { name: 'username', type: 'string' },
+    if (!updatedUser) {
+      return utils.helpers.sendErrorResponse(res, {}, 'User not found');
+    }
 
-  // ]
-  // const { body } = req;
-  // const hasRequired = utils.helpers.validParam(body, required)
-
-  // if (hasRequired.success) {
-  //   console.log(req.user.email, 'rr')
-  //   let email: string = req.user.email.toLowerCase();
-
-  //   Jobseeker.findOne({email}, async (err:Error, user) => {
-  //       if (err){
-  //           console.log(err, 'user signup error');
-  //           return utils.helpers.sendErrorResponse(res, { }, 'Something went wrong, please try again')
-  //       }
-
-  //      if(user != null){ 
-
-               
-  //           Jobseeker.updateOne(
-  //             { email: email}, {
-  //             $set: {
-  //                 name: body.name,
-  //                 username: body.username
-  //             },
-  //         }, (err, updated) => {
-          
-  //             if (err) {
-  //                 console.log(err);
-  //                 return utils.helpers.errorResponse(
-  //                   res,
-  //                   [],
-  //                   'Something went wrong, please try again',
-  //                   )
-  //             }
-              
-  //                 return utils.helpers.sendSuccessResponse(
-  //                   res,
-  //                   [],
-  //                   'User has been updated',
-  //                   )
-
-
-             
-  //           });
-
+    return utils.helpers.sendSuccessResponse(
+      res,
+      [],
+      'User updated successfully'
+    );
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return utils.helpers.sendErrorResponse(
+      res,
+      {},
+      'Failed to update user, please try again'
+    );
+  }
+                 
+  
 
              
 
 
-  //       }else{
-
-  //           return utils.helpers.errorResponse(
-  //             res,
-  //             [],
-  //             'User does not exists',
-  //             )
-      
-  
-  //       }
-            
-        
-  //   })
-  
-  // }else{
-
-  //   console.log(hasRequired.message)
-  //   const message = hasRequired.message
-  // return utils.helpers.sendErrorResponse(
-  //   res,
-  //   { message },
-  //   'Missing required fields',
-  //   )
-
-  // }
 }
 
 

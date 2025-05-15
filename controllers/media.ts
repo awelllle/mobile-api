@@ -62,7 +62,7 @@ export class MediaController {
                 }
               
                 const path = req.file.path
-               // console.log(req.file, 'filey')
+                console.log(req.file, 'filey')
                 const uniqueFilename = new Date().toISOString()
                // const folder = 'test'//req.user.companyName.replace(/[^a-zA-Z0-9]/g, '')
 

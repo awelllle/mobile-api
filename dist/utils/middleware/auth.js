@@ -2,6 +2,12 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateToken = void 0;
 const jwt = require("jsonwebtoken");
+/**
+ * This function generates a JWT token for a given username. The token is
+ * signed with a secret key and includes the username and issued at time.
+ * The token is valid for 2 days.
+ 
+ */
 const generateToken = username => !username
     ? null
     : `${jwt.sign({

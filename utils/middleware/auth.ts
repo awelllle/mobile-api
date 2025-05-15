@@ -9,6 +9,14 @@ type MyToken = {
   exp: number
 }
 
+
+/**
+ * This function generates a JWT token for a given username. The token is
+ * signed with a secret key and includes the username and issued at time.
+ * The token is valid for 2 days.
+ 
+ */
+
 export const generateToken = username =>
   !username
     ? null

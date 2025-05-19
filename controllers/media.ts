@@ -60,9 +60,10 @@ export class MediaController {
                   console.log(err, 'cloudinary error')
                   return utils.helpers.sendErrorResponse(res, '', 'Something went wrong')
                 }
-              
-                const path = req.file.path
                 console.log(req.file, 'filey')
+
+                const path = req.file.path
+               
                 const uniqueFilename = new Date().toISOString()
                // const folder = 'test'//req.user.companyName.replace(/[^a-zA-Z0-9]/g, '')
 
@@ -87,25 +88,7 @@ export class MediaController {
                 { folder: `Jobbify/${uniqueFilename}`,  resource_type: 'auto', }, 
                 function(err, image) {
                       if (err) {
-                      //console.log(err, req.user, 'upload err, cloudinary')
-
-                      // const notification: EmailNotification = {
-                      //   type: "email",
-                      //   from: "no-reply@pivo.africa",
-                      //   to: 'awelle@pivo.africa',
-                      //   subject: "Upload error -  Cloudinary",
-                      //   message: `${err.message} - Filename: ${req.file.filename}, Type of Document: ${req.file.mimetype} User:${req.user.companyName}`,
-                      //   templateId: "",
-                      //   vars: {
-                      //     //code: `${err.message} - ${req.user.companyName}`,
-                      //   },
-                      // };
-            
-                      try {
-                        // utils.sendNotification(notification);
-                      } catch (e) {
-                        console.error(e);
-                      }
+                      console.log(err, 'upload error')
                         return utils.helpers.sendErrorResponse(res, '', 'Something went wrong')
                     }
                    

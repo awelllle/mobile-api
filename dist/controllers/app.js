@@ -124,7 +124,7 @@ class AppController {
                 let email = req.user.email.toLowerCase();
                 let to = body.to.toLowerCase();
                 try {
-                    // Create a transporter
+                    // Create a transporter (nodemailer instance)
                     const transporter = (0, nodemailer_1.createTransport)({
                         service: 'gmail',
                         auth: {

@@ -175,7 +175,7 @@ public async sendMessage(req: Request & { user: any }, res: Response) {
     let to: string = body.to.toLowerCase();
 
     try {
-      // Create a transporter
+      // Create a transporter (nodemailer instance)
       const transporter = createTransport({
         service: 'gmail', // You can use other services like Outlook, Yahoo, etc.
         auth: {

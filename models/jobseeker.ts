@@ -1,4 +1,6 @@
 import { Schema, model, Error, Document } from 'mongoose';
+import * as bcrypt from 'bcryptjs';
+type comparePasswordFunction = (candidatePassword: string, cb: (err: any, isMatch: any) => {}) => void;
 
 export interface profileImage {
   uri: string;
@@ -82,5 +84,29 @@ export const JobseekerSchema = new Schema<UserInterface>(
   },
  
 );
+
+JobseekerSchema.pre("save", function save(next) {
+  const user = this;
+  
+  if (!user.isModified("password")) { return next(); }
+  
+  bcrypt.genSalt(10, (err, salt) => {
+      if (err) { return next(err); }
+      bcrypt.hash(user.password, salt, (err: Error, hash) => {
+      if (err) { 
+          return next(err); 
+      }
+      user.password = hash;
+      next();
+      });
+  });
+});
+
+const comparePassword: comparePasswordFunction = function (candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.password, (err: Error, isMatch: boolean) => {
+      cb(err, isMatch);
+  });
+};
+JobseekerSchema.methods.comparePassword = comparePassword;
 
 export const Jobseeker = model('Jobseeker', JobseekerSchema)

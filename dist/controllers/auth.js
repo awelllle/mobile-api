@@ -66,13 +66,21 @@ class AuthController {
             if (hasRequired.success) {
                 let email = body.email.toLowerCase();
                 let password = body.password;
-                jobseeker_1.Jobseeker.findOne({ email, password }, (err, user) => __awaiter(this, void 0, void 0, function* () {
+                jobseeker_1.Jobseeker.findOne({ email }, (err, user) => __awaiter(this, void 0, void 0, function* () {
                     if (err) {
                         return utils_1.default.helpers.sendErrorResponse(res, {}, 'Something went wrong, please try again');
                     }
+                    //console.log(user, 'user found')
                     if (user != null) {
-                        const token = utils_1.default.auth.generateToken(user.email);
-                        return utils_1.default.helpers.sendSuccessResponse(res, [{ token }], 'login successful');
+                        user.comparePassword(password.toString(), (error, isMatch) => __awaiter(this, void 0, void 0, function* () {
+                            if (error) {
+                                return utils_1.default.helpers.sendErrorResponse(res, {}, "Email or password incorrect");
+                            }
+                            if (isMatch) {
+                                const token = utils_1.default.auth.generateToken(user.email);
+                                return utils_1.default.helpers.sendSuccessResponse(res, [{ token }], 'login successful');
+                            }
+                        }));
                         // return  res.status(200).json({token, userId: '1234567890'});
                     }
                     else {

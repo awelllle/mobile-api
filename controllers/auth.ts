@@ -103,20 +103,38 @@ public async signIn(req: Request & {user: any}, res: Response) {
      let password: string = body.password
     
 
-    Jobseeker.findOne({email, password}, async (err:Error, user) => {
+    Jobseeker.findOne({email}, async (err:Error, user) => {
         if (err){
             return utils.helpers.sendErrorResponse(res, { }, 'Something went wrong, please try again')
         }
 
+        //console.log(user, 'user found')
+
        if(user != null){ 
+          user.comparePassword(password.toString(),async (error, isMatch) => {
+              if (error) {
+                return utils.helpers.sendErrorResponse(
+                  res,
+                  {},
+                  "Email or password incorrect"
+                );
+              }
+              if (isMatch) {
+                const token = utils.auth.generateToken(user.email)
 
-        const token = utils.auth.generateToken(user.email)
+                return utils.helpers.sendSuccessResponse(
+                  res,
+                  [{token}],
+                  'login successful',
+                  )
 
-        return utils.helpers.sendSuccessResponse(
-          res,
-          [{token}],
-          'login successful',
-          )
+              }
+            });
+
+          
+
+
+       
 
        // return  res.status(200).json({token, userId: '1234567890'});
 
